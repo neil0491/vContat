@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { Teleport, computed, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useContactStore } from "@/stores/contact";
 
 import { ROUTE_NAME } from "@/router/routeName";
 import { tags } from "@/utils/constants";
-import type { IContact } from "@/models/contact";
-import FormContact from "@/components/FormContact.vue";
-import { useContactFormError } from "@/composables/useContactFormError";
+import AddContactButton from "@/components/AddContactButton.vue";
 
 const contactStore = useContactStore();
 const { getContacts } = storeToRefs(contactStore);
 
-const showModal = ref(false);
 const search = ref("");
 
 const listContacts = computed(() => {
@@ -29,49 +26,6 @@ const listContacts = computed(() => {
   }
   return getContacts.value;
 });
-
-const inputs = reactive<IContact>({
-  id: Date.now(),
-  email: "",
-  name: "",
-  phone: "",
-  tags: []
-});
-
-const { errorInputs, handleErrorForms, handleError } = useContactFormError();
-
-const updateData = (data: IContact) => {
-  inputs.id = Date.now();
-  inputs.name = data.name;
-  inputs.email = data.email;
-  inputs.phone = data.phone;
-};
-
-const updateTag = (tag: string) => {
-  if (inputs.tags?.includes(tag)) {
-    inputs.tags = inputs.tags.filter((t) => t !== tag);
-  } else {
-    inputs.tags?.push(tag);
-  }
-};
-
-const addContact = () => {
-  handleErrorForms(inputs);
-  if (errorInputs.name || errorInputs.email || errorInputs.name) {
-    return;
-  }
-  contactStore.addContact(inputs);
-  showModal.value = false;
-};
-
-const cancel = () => {
-  inputs.id = Date.now();
-  inputs.name = "";
-  inputs.email = "";
-  inputs.phone = "";
-  inputs.tags = [];
-  showModal.value = false;
-};
 </script>
 
 <template>
@@ -79,16 +33,14 @@ const cancel = () => {
     <div class="container max-w-screen-2xl px-4 mx-auto sm:px-8">
       <div class="py-8">
         <div class="flex flex-row justify-between w-full mb-1 sm:mb-0">
-          <div
-            class="flex flex-col justify-center space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0"
-          >
+          <div class="flex justify-between w-full md:flex-row md:w-full md:space-x-3 md:space-y-0">
             <div class="relative w-full">
               <input v-model="search" type="text" placeholder="Поиск" class="input-search" />
             </div>
             <select v-model="contactStore.activeTag" class="filter-select">
               <option :value="tag" v-for="(tag, index) in tags" :key="index">{{ tag }}</option>
             </select>
-            <button class="add-contact" @click="showModal = true">Добавить контакт</button>
+            <AddContactButton />
           </div>
         </div>
         <div class="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
@@ -168,51 +120,15 @@ const cancel = () => {
         </div>
       </div>
     </div>
-
-    <Teleport to="body">
-      <Transition name="slide-fade">
-        <div
-          class="absolute w-full left-0 top-0 bg-gray-500/50 min-h-full flex items-center"
-          v-if="showModal"
-        >
-          <FormContact
-            v-if="showModal"
-            @error="handleError"
-            :contact="inputs"
-            @updateData="updateData"
-            @updateTag="updateTag"
-          >
-            <button
-              @click="addContact"
-              type="submit"
-              class="py-2 px-4 w-max bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-            >
-              Сохранить
-            </button>
-            <button
-              @click="cancel"
-              type="button"
-              class="py-2 px-4 w-max bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-            >
-              Отмена
-            </button>
-          </FormContact>
-        </div>
-      </Transition>
-    </Teleport>
   </main>
 </template>
 
 <style>
-body{
+body {
   overflow-x: hidden;
 }
 .input-search {
   @apply rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent;
-}
-
-.add-contact {
-  @apply flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-green-200;
 }
 
 .filter-select {

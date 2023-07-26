@@ -16,7 +16,7 @@ export const useContactStore = defineStore("contact", {
     getContacts: (state): IContact[] | undefined => {
       for (const tag of tags) {
         if (tag == state.activeTag) {
-          if (tag === "Все") {
+          if (tag === tags[0]) {
             return state.contacts;
           } else {
             return state.contacts.filter((item) => item.tags?.includes(tag));
@@ -28,7 +28,9 @@ export const useContactStore = defineStore("contact", {
   },
   actions: {
     addContact(contact: IContact) {
-      this.contacts.push(contact);
+      console.log(contact);
+
+      this.contacts = [...this.contacts, contact];
     },
     deleteContact(contact: IContact) {
       this.contacts = this.contacts.filter((c) => c.id !== contact.id);

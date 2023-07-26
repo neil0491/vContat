@@ -28,7 +28,7 @@ const { errorInputs, handleErrorForms, handleError } = useContactFormError();
 
 const updateUser = () => {
   handleErrorForms(inputs);
-  if (errorInputs.name || errorInputs.email || errorInputs.name) {
+  if (errorInputs.name || errorInputs.email || errorInputs.phone) {
     return;
   }
 
@@ -62,7 +62,7 @@ const updateTag = (tag: string) => {
 </script>
 
 <template>
-  <div class="about flex justify-center align-center min-h-full mt-20">
+  <div class="about max-w-4xl  md:w-3/4 mx-auto  flex justify-center align-center min-h-full mt-20">
     <FormContact
       @error="handleError"
       :contact="inputs"
@@ -84,16 +84,6 @@ const updateTag = (tag: string) => {
         Удалить
       </button>
     </FormContact>
-
-    <!-- <form @submit.prevent="updateUser">
-      <input v-model="inputs.name" type="text" placeholder="name" />
-      <input v-model="inputs.email" type="email" placeholder="email" />
-      <input v-model="inputs.phone" type="phone" placeholder="phone" />
-      <div v-for="tag in contact?.tags" :key="tag">{{ tag }}</div>
-
-      <input type="submit" value="Update" />
-      <button @click="deleteUser">Delete</button>
-    </form> -->
     <br />
   </div>
 </template>

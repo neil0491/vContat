@@ -1,6 +1,6 @@
 import type { IContact } from "@/models/contact";
 import { checkEmail, validatePhoneNumber } from "@/utils/helpers/validate";
-import { reactive, ref, type InputHTMLAttributes } from "vue";
+import { reactive, type InputHTMLAttributes } from "vue";
 
 export function useContactFormError() {
   const errorInputs = reactive({

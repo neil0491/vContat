@@ -30,7 +30,7 @@ const handleError = (e: boolean, type: InputHTMLAttributes["type"]) => {
 </script>
 
 <template>
-  <div class="container max-w-2xl mx-auto shadow-md md:w-3/4">
+  <div class="container shadow-md">
     <div class="bg-white rounded-md p-4">
       <div class="items-center w-full p-4 text-gray-500 md:inline-flex">
         <p id="user-info-email" class="max-w-sm mx-auto md:w-1/3">Имя:</p>

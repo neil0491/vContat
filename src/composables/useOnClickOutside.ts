@@ -7,7 +7,7 @@ import { useEventListener } from "./useEventListener";
     });
 */
 
-export function useOnClickOutside(rootEl: Ref<HTMLElement | null>, callback: () => any) {
+export function useOnClickOutside(rootEl: Ref<any | null>, callback: () => any) {
   // `mousedown` or `mouseup` is better than `click` here because it doesn't bubble up like `click`
   // if you've used `click` here, the callback will be run immediatly.
 
