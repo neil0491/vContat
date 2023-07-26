@@ -116,6 +116,9 @@ const listContacts = computed(() => {
                 </tr>
               </tbody>
             </table>
+            <div v-if="listContacts?.length === 0" class="w-full text-center py-6 text-lg">
+              Контакты не найдены
+            </div>
           </div>
         </div>
       </div>
