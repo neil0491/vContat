@@ -28,8 +28,6 @@ export const useContactStore = defineStore("contact", {
   },
   actions: {
     addContact(contact: IContact) {
-      console.log(contact);
-
       this.contacts = [...this.contacts, contact];
     },
     deleteContact(contact: IContact) {
