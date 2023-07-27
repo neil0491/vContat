@@ -74,7 +74,7 @@ const handleError = (e: boolean, type: InputHTMLAttributes["type"]) => {
           <div class="flex gap-4 flex-wrap">
             <span
               @click="() => updateTag(tag)"
-              v-for="tag in tags"
+              v-for="tag in tags.slice(1, tags.length)"
               :key="tag"
               class="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900 cursor-pointer"
             >
