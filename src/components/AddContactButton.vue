@@ -9,12 +9,11 @@ import { useOnClickOutside } from "@/composables/useOnClickOutside";
 const contactStore = useContactStore();
 
 const showModal = ref(false);
+const showErrorModal = ref(false);
 
 const form = ref<HTMLFormElement | null>(null);
 
 useOnClickOutside(form, () => {
-  console.log("clic;");
-
   cancel();
 });
 
@@ -31,6 +30,10 @@ const { errorInputs, handleErrorForms, handleError } = useContactFormError();
 const addContact = () => {
   handleErrorForms(inputs);
   if (errorInputs.name || errorInputs.email || errorInputs.phone) {
+    showErrorModal.value = true;
+    setTimeout(() => {
+      showErrorModal.value = false;
+    }, 5000);
     return;
   }
   const data: IContact = { ...inputs };
@@ -68,35 +71,43 @@ const updateTag = (tag: string) => {
     <button @click="showModal = true">Добавить контакт</button>
     <Teleport to="body">
       <Transition name="slide-fade">
-        <form
-          @submit.prevent="addContact"
-          class="fixed w-full left-0 top-0 bg-gray-500/50 min-h-full flex items-center"
-          v-if="showModal"
-        >
-          <div class="container max-w-2xl mx-auto" ref="form">
-            <FormContact
-              v-if="showModal"
-              @error="handleError"
-              :contact="inputs"
-              @updateData="updateData"
-              @updateTag="updateTag"
-            >
-              <button
-                type="submit"
-                class="py-2 px-4 w-max bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+        <div>
+          <form
+            class="fixed w-full left-0 top-0 bg-gray-500/50 min-h-full flex items-center"
+            @submit.prevent="addContact"
+            v-if="showModal"
+          >
+            <div class="container max-w-2xl mx-auto" ref="form">
+              <FormContact
+                v-if="showModal"
+                @error="handleError"
+                :contact="inputs"
+                @updateData="updateData"
+                @updateTag="updateTag"
               >
-                Сохранить
-              </button>
-              <button
-                @click="cancel"
-                type="button"
-                class="py-2 px-4 w-max bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-              >
-                Отмена
-              </button>
-            </FormContact>
-          </div>
-        </form>
+                <button
+                  type="submit"
+                  class="py-2 px-4 w-max bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                >
+                  Сохранить
+                </button>
+                <button
+                  @click="cancel"
+                  type="button"
+                  class="py-2 px-4 w-max bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                >
+                  Отмена
+                </button>
+              </FormContact>
+            </div>
+          </form>
+          <p
+            v-if="showErrorModal"
+            class="text-center text-white text-lg bg-red-500 z-10 absolute right-2 top-2 w-1/3 mx-auto p-5 rounded-md"
+          >
+            Заполните правильно все поля
+          </p>
+        </div>
       </Transition>
     </Teleport>
   </div>
